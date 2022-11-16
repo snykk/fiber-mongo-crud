@@ -32,4 +32,7 @@ func main() {
 
 	// Setup Repository
 	todoRepository := repository.NewTodoRepository(db)
+
+	// Setup Service
+	todoService := service.NewTodoService(&todoRepository)
 }
