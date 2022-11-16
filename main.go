@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	config "github.com/snykk/fiber-mongo-crud/config"
 	"github.com/snykk/fiber-mongo-crud/controller"
 	"github.com/snykk/fiber-mongo-crud/repository"
@@ -41,4 +44,16 @@ func main() {
 
 	// Setup Controller
 	todoController := controller.NewTodoController(&todoService)
+
+	// Setup Fiber
+	app := fiber.New()
+	app.Use(recover.New())
+
+	// Setup Routing
+	todoController.Route(app)
+
+	// Start App
+	if err = app.Listen(fmt.Sprintf(":%d", config.AppConfig.PORT)); err != nil {
+		panic(err)
+	}
 }
