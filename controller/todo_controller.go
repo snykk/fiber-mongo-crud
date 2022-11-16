@@ -39,6 +39,10 @@ func (controller *TodoController) Create(c *fiber.Ctx) error {
 
 	}
 
+	if err := utils.IsPriorityValid(request.Priority); err != nil {
+		return NewErrorResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+
 	request.Id = uuid.New().String()
 	response := controller.TodoService.Create(request)
 	return NewSuccessResponse(c, "todos data created successfully", response)
@@ -68,6 +72,10 @@ func (controller *TodoController) UpdateTodo(c *fiber.Ctx) error {
 	var request datatransfer.TodoUpdateRequest
 	err := c.BodyParser(&request)
 	if err != nil {
+		return NewErrorResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+
+	if err := utils.IsPriorityValid(request.Priority); err != nil {
 		return NewErrorResponse(c, fiber.StatusBadRequest, err.Error())
 	}
 
