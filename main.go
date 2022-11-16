@@ -4,6 +4,9 @@ import (
 	"log"
 
 	config "github.com/snykk/fiber-mongo-crud/config"
+	"github.com/snykk/fiber-mongo-crud/controller"
+	"github.com/snykk/fiber-mongo-crud/repository"
+	"github.com/snykk/fiber-mongo-crud/service"
 )
 
 func init() {
@@ -35,4 +38,7 @@ func main() {
 
 	// Setup Service
 	todoService := service.NewTodoService(&todoRepository)
+
+	// Setup Controller
+	todoController := controller.NewTodoController(&todoService)
 }
