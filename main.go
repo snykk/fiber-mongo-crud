@@ -29,4 +29,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Setup Repository
+	todoRepository := repository.NewTodoRepository(db)
 }
