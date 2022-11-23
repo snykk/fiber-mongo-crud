@@ -44,7 +44,10 @@ func (controller *TodoController) Create(c *fiber.Ctx) error {
 	}
 
 	request.Id = uuid.New().String()
-	response := controller.TodoService.Create(request)
+	response, err := controller.TodoService.Create(request)
+	if err != nil {
+		return NewErrorResponse(c, fiber.StatusBadRequest, err.Error())
+	}
 	return NewSuccessResponse(c, "todos data created successfully", response)
 }
 

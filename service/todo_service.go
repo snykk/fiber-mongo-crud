@@ -7,7 +7,7 @@ import (
 )
 
 type TodoService interface {
-	Create(request datatransfer.TodoRequest) (response datatransfer.TodoResponse)
+	Create(request datatransfer.TodoRequest) (response datatransfer.TodoResponse, err error)
 	List() (responses []datatransfer.TodoResponse, err error)
 	GetById(id string) (responses datatransfer.TodoResponse, err error)
 	UpdateTodo(id string, request datatransfer.TodoUpdateRequest) (response datatransfer.TodoResponse, err error)
@@ -25,7 +25,7 @@ type todoService struct {
 	TodoRepository repository.TodoRepository
 }
 
-func (service *todoService) Create(request datatransfer.TodoRequest) (response datatransfer.TodoResponse) {
+func (service *todoService) Create(request datatransfer.TodoRequest) (response datatransfer.TodoResponse, err error) {
 	// validation.Validate(request)
 
 	todo := entity.Todo{
@@ -34,7 +34,10 @@ func (service *todoService) Create(request datatransfer.TodoRequest) (response d
 		Priority: request.Priority,
 	}
 
-	service.TodoRepository.Insert(todo)
+	err = service.TodoRepository.Insert(todo)
+	if err != nil {
+		return response, err
+	}
 
 	response = datatransfer.TodoResponse{
 		Id:       todo.Id,
@@ -42,7 +45,7 @@ func (service *todoService) Create(request datatransfer.TodoRequest) (response d
 		Priority: todo.Priority,
 		IsDone:   todo.IsDone,
 	}
-	return response
+	return response, err
 }
 
 func (service *todoService) List() (responses []datatransfer.TodoResponse, err error) {
